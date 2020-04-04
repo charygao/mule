@@ -28,7 +28,6 @@ public class XmlSdkConfigurationProvider extends LifecycleAwareConfigurationProv
 
   private final List<ConfigurationProvider> innerConfigProviders;
   private final Map<String, String> parameters;
-  private boolean injected = false;
 
   public XmlSdkConfigurationProvider(String name,
                                      List<ConfigurationProvider> innerConfigProviders,

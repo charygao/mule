@@ -58,6 +58,7 @@ public class XmlSdkConfigurationProvider extends LifecycleAwareConfigurationProv
 
 
   //TODO: MULE-18253 Remove all this when the issue is properly fixed.
+  //TODO: MULE-17419
 
   @Override
   public void initialise() throws InitialisationException {

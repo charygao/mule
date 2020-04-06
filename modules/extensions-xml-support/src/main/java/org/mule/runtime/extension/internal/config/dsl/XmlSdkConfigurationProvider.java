@@ -6,9 +6,13 @@
  */
 package org.mule.runtime.extension.internal.config.dsl;
 
+import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.disposeIfNeeded;
+import org.mule.runtime.api.component.location.ComponentLocation;
+import org.mule.runtime.api.component.location.Location;
 import org.mule.runtime.api.event.Event;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.lifecycle.InitialisationException;
+import org.mule.runtime.api.lifecycle.Lifecycle;
 import org.mule.runtime.api.meta.model.ExtensionModel;
 import org.mule.runtime.api.meta.model.config.ConfigurationModel;
 import org.mule.runtime.core.api.MuleContext;
@@ -18,6 +22,8 @@ import org.mule.runtime.module.extension.internal.runtime.config.LifecycleAwareC
 
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 /**
  * {@link ConfigurationProvider} implementation for Xml-Sdk connectors.
@@ -31,12 +37,14 @@ public class XmlSdkConfigurationProvider extends LifecycleAwareConfigurationProv
 
   public XmlSdkConfigurationProvider(String name,
                                      List<ConfigurationProvider> innerConfigProviders,
+                                     List<Object> innerObjects,
                                      Map<String, String> parameters,
                                      ExtensionModel extensionModel,
                                      ConfigurationModel configurationModel,
                                      MuleContext muleContext) {
     super(name, extensionModel, configurationModel, muleContext);
     innerConfigProviders.forEach(this::registerConfigurationProvider);
+    innerObjects.forEach(this::registerInnerObject);
     this.innerConfigProviders = innerConfigProviders;
     this.parameters = parameters;
   }

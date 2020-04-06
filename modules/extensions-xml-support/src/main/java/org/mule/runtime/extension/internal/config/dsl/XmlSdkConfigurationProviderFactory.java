@@ -19,6 +19,7 @@ import org.mule.runtime.extension.api.runtime.config.ConfigurationProvider;
 import org.mule.runtime.module.extension.internal.config.dsl.AbstractExtensionObjectFactory;
 import org.mule.runtime.module.extension.internal.runtime.exception.RequiredParameterNotSetException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,9 @@ class XmlSdkConfigurationProviderFactory extends AbstractExtensionObjectFactory<
   private final ConfigurationModel configurationModel;
 
   private final LazyValue<String> configName = new LazyValue<>(this::getName);
+
   private List<ConfigurationProvider> innerConfigProviders = emptyList();
+  private List<Object> innerObjects = emptyList();
 
   public XmlSdkConfigurationProviderFactory(ExtensionModel extensionModel,
                                             ConfigurationModel configurationModel,
@@ -50,16 +53,29 @@ class XmlSdkConfigurationProviderFactory extends AbstractExtensionObjectFactory<
       rawParams.put(entry.getKey(), entry.getValue().toString());
     }
 
-    return new XmlSdkConfigurationProvider(configName.get(), innerConfigProviders, rawParams, extensionModel, configurationModel,
+    return new XmlSdkConfigurationProvider(configName.get(),
+                                           innerConfigProviders,
+                                           innerObjects,
+                                           rawParams,
+                                           extensionModel,
+                                           configurationModel,
                                            muleContext);
   }
 
-  public List<ConfigurationProvider> getInnerConfigProviders() {
-    return innerConfigProviders;
-  }
+  public void setInnerConfigElements(List<Object> innerElements) {
+    List<ConfigurationProvider> configurationProviders = new ArrayList<>();
+    List<Object> lifecycleAwareObjects = new ArrayList<>();
 
-  public void setInnerConfigProviders(List<ConfigurationProvider> innerConfigProviders) {
-    this.innerConfigProviders = unmodifiableList(innerConfigProviders);
+    for(Object e : innerElements) {
+      if(e instanceof ConfigurationProvider) {
+        ConfigurationProvider castedE = (ConfigurationProvider)e;
+        configurationProviders.add(castedE);
+      }else {
+        lifecycleAwareObjects.add(e);
+      }
+    }
+    this.innerObjects = unmodifiableList(lifecycleAwareObjects);
+    this.innerConfigProviders = unmodifiableList(configurationProviders);
   }
 
   public String getName() {

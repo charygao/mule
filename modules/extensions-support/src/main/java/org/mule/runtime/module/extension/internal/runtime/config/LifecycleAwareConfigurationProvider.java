@@ -160,7 +160,7 @@ public abstract class LifecycleAwareConfigurationProvider extends AbstractCompon
    * @param configuration a newly created {@link ConfigurationInstance}
    */
   protected void registerConfiguration(ConfigurationInstance configuration) {
-    registerInnerObject(configuration);
+    registeredConfigurationObjects.add(configuration);
   }
 
   /**
@@ -170,17 +170,7 @@ public abstract class LifecycleAwareConfigurationProvider extends AbstractCompon
    * @param configurationProvider a newly created {@link ConfigurationProvider}
    */
   protected void registerConfigurationProvider(ConfigurationProvider configurationProvider) {
-    registerInnerObject(configurationProvider);
-  }
-
-  /**
-   * Implementations are to invoke this method everytime they create a new {@link Object} so that they're kept
-   * track of and the lifecycle can be propagated
-   *
-   * @param innerConfigurationObject a newly created {@link Object}
-   */
-  protected void registerInnerObject(Object innerConfigurationObject) {
-    registeredConfigurationObjects.add(innerConfigurationObject);
+    registeredConfigurationObjects.add(configurationProvider);
   }
 
   /**

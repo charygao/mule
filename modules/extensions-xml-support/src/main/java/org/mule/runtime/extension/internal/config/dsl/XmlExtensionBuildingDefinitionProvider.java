@@ -116,12 +116,8 @@ public class XmlExtensionBuildingDefinitionProvider implements ExtensionBuilding
                                              fromMultipleDefinitions(paramsDefinitions
                                                  .toArray(new KeyAttributeDefinitionPair[paramsDefinitions.size()]))
                                                      .build())
-              .withSetterParameterDefinition("innerConfigElements",
-
-                                             //This should expect an Object because we can have either ConfigProviders or
-                                             //parameters that are allowed to be defined as topLevel. Those are not wrapped
-                                             //and we can't know their class in advance.
-                                             fromChildCollectionConfiguration(Object.class).build())
+              .withSetterParameterDefinition("innerConfigProviders",
+                                             fromChildCollectionConfiguration(ConfigurationProvider.class).build())
               .build());
         }
 

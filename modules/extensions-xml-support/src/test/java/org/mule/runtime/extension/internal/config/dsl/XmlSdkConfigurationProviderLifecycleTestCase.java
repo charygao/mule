@@ -53,13 +53,10 @@ public class XmlSdkConfigurationProviderLifecycleTestCase {
 
     ConfigurationProvider innerProvider = mock(ConfigurationProvider.class, withSettings().extraInterfaces(Lifecycle.class));
 
-    Object innerLifecycleAwareObject = mock(Object.class, withSettings().extraInterfaces(Lifecycle.class));
-
     List<ConfigurationProvider> innerConfigProviders = ImmutableList.of(innerProvider);
-    List<Object> innerConfigObjects = ImmutableList.of(innerLifecycleAwareObject);
 
     XmlSdkConfigurationProvider provider =
-        new XmlSdkConfigurationProvider(name, innerConfigProviders, innerConfigObjects, emptyMap(), extensionModel, configurationModel, muleContext);
+            new XmlSdkConfigurationProvider(name, innerConfigProviders, emptyMap(), extensionModel, configurationModel, muleContext);
 
     initialiseIfNeeded(provider);
     startIfNeeded(provider);
@@ -70,10 +67,5 @@ public class XmlSdkConfigurationProviderLifecycleTestCase {
     verify((Startable) innerProvider, times(1)).start();
     verify((Stoppable) innerProvider, times(1)).stop();
     verify((Disposable) innerProvider, times(1)).dispose();
-
-    verify((Initialisable) innerLifecycleAwareObject, times(1)).initialise();
-    verify((Startable) innerLifecycleAwareObject, times(1)).start();
-    verify((Stoppable) innerLifecycleAwareObject, times(1)).stop();
-    verify((Disposable) innerLifecycleAwareObject, times(1)).dispose();
   }
 }

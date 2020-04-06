@@ -35,7 +35,6 @@ class XmlSdkConfigurationProviderFactory extends AbstractExtensionObjectFactory<
   private final LazyValue<String> configName = new LazyValue<>(this::getName);
 
   private List<ConfigurationProvider> innerConfigProviders = emptyList();
-  private List<Object> innerObjects = emptyList();
 
   public XmlSdkConfigurationProviderFactory(ExtensionModel extensionModel,
                                             ConfigurationModel configurationModel,
@@ -55,27 +54,18 @@ class XmlSdkConfigurationProviderFactory extends AbstractExtensionObjectFactory<
 
     return new XmlSdkConfigurationProvider(configName.get(),
                                            innerConfigProviders,
-                                           innerObjects,
                                            rawParams,
                                            extensionModel,
                                            configurationModel,
                                            muleContext);
   }
 
-  public void setInnerConfigElements(List<Object> innerElements) {
-    List<ConfigurationProvider> configurationProviders = new ArrayList<>();
-    List<Object> lifecycleAwareObjects = new ArrayList<>();
+  public List<ConfigurationProvider> getInnerConfigProviders() {
+    return innerConfigProviders;
+  }
 
-    for(Object e : innerElements) {
-      if(e instanceof ConfigurationProvider) {
-        ConfigurationProvider castedE = (ConfigurationProvider)e;
-        configurationProviders.add(castedE);
-      }else {
-        lifecycleAwareObjects.add(e);
-      }
-    }
-    this.innerObjects = unmodifiableList(lifecycleAwareObjects);
-    this.innerConfigProviders = unmodifiableList(configurationProviders);
+  public void setInnerConfigProviders(List<ConfigurationProvider> innerConfigProviders) {
+    this.innerConfigProviders = unmodifiableList(innerConfigProviders);
   }
 
   public String getName() {

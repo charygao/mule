@@ -6,14 +6,16 @@
  */
 package org.mule.runtime.core.internal.lifecycle.phases;
 
-import static java.util.Collections.newSetFromMap;
+import static java.lang.System.identityHashCode;
+import static java.util.stream.Collectors.toList;
 import org.mule.runtime.core.internal.registry.Registry;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of {@link LifecycleObjectSorter}.
@@ -78,13 +80,36 @@ public class DefaultLifecycleObjectSorter implements LifecycleObjectSorter {
    */
   @Override
   public List<Object> getSortedObjects() {
-    Set<Object> sorted = newSetFromMap(new IdentityHashMap<>(objectCount));
+    Set<IdentityWrapper> sorted = new LinkedHashSet<>(objectCount);
     for (List<Object> bucket : buckets) {
       if (bucket != null) {
-        sorted.addAll(bucket);
+        bucket.forEach(e -> sorted.add(new IdentityWrapper(e)));
       }
     }
-
-    return new ArrayList<>(sorted);
+    return sorted.stream().map(w -> w.delegate).collect(toList());
   }
+
+  private static class IdentityWrapper {
+
+    private Object delegate;
+
+    private IdentityWrapper(Object delegate) {
+      this.delegate = delegate;
+    }
+
+    @Override
+    public int hashCode() {
+      return identityHashCode(delegate);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (!(obj instanceof IdentityWrapper)) {
+        return false;
+      }
+      IdentityWrapper otherWrapped = (IdentityWrapper)obj;
+      return this.delegate == otherWrapped.delegate;
+    }
+  }
+
 }

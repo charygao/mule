@@ -10,11 +10,9 @@ import static java.util.Collections.newSetFromMap;
 import org.mule.runtime.core.internal.registry.Registry;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -80,7 +78,7 @@ public class DefaultLifecycleObjectSorter implements LifecycleObjectSorter {
    */
   @Override
   public List<Object> getSortedObjects() {
-    Set<Object> sorted = newSetFromMap(new LinkedHashMap<>(objectCount));
+    Set<Object> sorted = newSetFromMap(new IdentityHashMap<>(objectCount));
     for (List<Object> bucket : buckets) {
       if (bucket != null) {
         sorted.addAll(bucket);

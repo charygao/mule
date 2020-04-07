@@ -6,7 +6,6 @@
  */
 package org.mule.runtime.extension.internal.config.dsl;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -33,10 +32,11 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
+import io.qameta.allure.Issue;
 import org.junit.Test;
 
+@Issue("MULE-18238")
 public class XmlSdkConfigurationProviderLifecycleTestCase {
-
 
   @Test
   public void validateLifecycleMethodsAreExecuted() throws Exception {
